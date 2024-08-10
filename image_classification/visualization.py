@@ -27,7 +27,7 @@ def show_image(train_image)-> None:
         figure = plt.figure(figsize=(9, 9))
         figure.add_subplot(row, col, i)
         plt.axis("off")
-# Squeeze is used to remove the single-dimensional entries from the shape of an array.
+    # Squeeze is used to remove the single-dimensional entries from the shape of an array.
         plt.imshow(img.squeeze(), cmap='gray')
     plt.show()
 
