@@ -83,55 +83,55 @@ class FashionMnistModel(nn.Module):
     
 
     def train_model(self, dataloader: DataLoader, epoch: int = 5) -> Tuple[float, float]:
-     self.train()
+        self.train()
 
-     loss_fn = nn.CrossEntropyLoss() #3.define loss function, cos it is multi-class clssifcation problem
-     optimizer = Adam(self.parameters(), lr=0.001)  # 4. Optimizer
-     for epoch in range(epoch):
-      running_loss: float = 0.0
-      correct: int = 0
-      total: int = 0
-      for images, labels in dataloader:
-        images, labels = images.to(self.device), labels.to(self.device)
-        # Zero the parameter gradients
-        optimizer.zero_grad()
-        #forward pass
-        prediction = self(images)
-        print(prediction)
-        #calculate loss
-        loss = loss_fn(prediction, labels)
-        print(loss)
-        #backward pass, we update the weights of the loss function
-        loss.backward()
-        #update weights
-        optimizer.step()
+        loss_fn = nn.CrossEntropyLoss() #3.define loss function, cos it is multi-class clssifcation problem
+        optimizer = Adam(self.parameters(), lr=0.001)  # 4. Optimizer
+        for epoch in range(epoch):
+            running_loss: float = 0.0
+            correct: int = 0
+            total: int = 0
+            for images, labels in dataloader:
+                images, labels = images.to(self.device), labels.to(self.device)
+                # Zero the parameter gradients
+                optimizer.zero_grad()
+                #forward pass
+                prediction = self(images)
+                print(prediction)
+                #calculate loss
+                loss = loss_fn(prediction, labels)
+                print(loss)
+                #backward pass, we update the weights of the loss function
+                loss.backward()
+                #update weights
+                optimizer.step()
 
-        # Print statistics
-        running_loss += loss.item()
-        predicted = prediction.argmax(axis=1)             # Converts the model's output probabilities (or logits) into class predictions.
+                # Print statistics
+                running_loss += loss.item()
+                predicted = prediction.argmax(axis=1)             # Converts the model's output probabilities (or logits) into class predictions.
 
-        labels = torch.argmax(labels, dim=1)
-        correct += (predicted == labels).sum().item()     ## Count correct predictions
+                labels = torch.argmax(labels, dim=1)
+                correct += (predicted == labels).sum().item()     ## Count correct predictions
 
-        total += labels.size(0)                             # Update the total number of samples
-      average_loss = running_loss / len(dataloader)
-      print(f'Epoch [{epoch + 1} / {self.epoch}], Loss: {average_loss:.4f}')
+                total += labels.size(0)                             # Update the total number of samples
+                average_loss = running_loss / len(dataloader)
+                print(f'Epoch [{epoch + 1} / {self.epoch}], Loss: {average_loss:.4f}')
 
-      accuracy = 100 * correct / total
-      print(f'Accuracy: {accuracy:.2f}%')
+            accuracy = 100 * correct / total
+        print(f'Accuracy: {accuracy:.2f}%')
 
-    print("Finished Training")
+        print("Finished Training")
 
-    #return average_loss, accuracy
+        #return average_loss, accuracy
 
     def save_model(self, save_path: Path, model_name: str) -> None:
-      """We want to save the trained model
-      Args:
+         """We want to save the trained model
+        Args:
         model: Model to be saved.
         save_path: Path where the model will be saved.
-      """
-      Path(save_path).parent.mkdir(parents=True, exist_ok=True)
-      torch.save(self.state_dict(), save_path / model_name)
+        """
+        Path(save_path).parent.mkdir(parents=True, exist_ok=True)
+        torch.save(self.state_dict(), save_path / model_name)
 
     def load_model(self, model_path) -> nn.Module:
       """We want to load the trained model
@@ -139,8 +139,8 @@ class FashionMnistModel(nn.Module):
         model: Model to be loaded.
         save_path: Path where the model is saved.
       """
-      model = torch.load(model_path)
-      return model
+        model = torch.load(model_path)
+        return model
 
 
     def validate_model(self, val_loader: DataLoader) -> Tuple[float, float]:
@@ -189,24 +189,24 @@ class FashionMnistModel(nn.Module):
         Returns:
                 Current loss and accuracy.
       """
-      images = torch.tensor(images)
-      labels = torch.tensor(labels)
-      inputs, labels = inputs.to(self.device), labels.to(self.device)
-      self.eval()
-      prediction = self.double()(inputs)
-      loss = loss_fn(prediction, labels)
+        images = torch.tensor(images)
+        labels = torch.tensor(labels)
+        inputs, labels = inputs.to(self.device), labels.to(self.device)
+        self.eval()
+        prediction = self.double()(inputs)
+        loss = loss_fn(prediction, labels)
 
-      predicted = prediction.argmax(axis=1)
-      labels = torch.argmax(labels, dim=1)
+        predicted = prediction.argmax(axis=1)
+        labels = torch.argmax(labels, dim=1)
 
-      correct = (predicted == labels).sum().item()
-      total = labels.size(0)
-      accuracy = 100 * correct / total
+        correct = (predicted == labels).sum().item()
+        total = labels.size(0)
+        accuracy = 100 * correct / total
 
-      #cnf_matrix = confusion_matrix(labels.cpu(), predicted.cpu())
+        #cnf_matrix = confusion_matrix(labels.cpu(), predicted.cpu())
         #logging.disable(logging.DEBUG)  # disable not needed debug logging from matplotlib
-      plt.figure(figsize=(10, 10))
-      plot_confusion_matrix(y_pred, y_true, normalize=True,
+        plt.figure(figsize=(10, 10))
+        plot_confusion_matrix(y_pred, y_true, normalize=True,
                             title='Confusion matrix, with normalization')
-      plt.show()
-      return loss, accuracy
+        plt.show()
+        #return loss, accuracy
